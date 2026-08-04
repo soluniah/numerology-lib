@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "numerology"
+version = "1.2.2"
+description = "A numerology calculation library"
+readme = "README.md"
+license = { text = "CC BY-NC-ND 4.0" }
+authors = [{ name = "Daniel Datri" }]
+requires-python = ">=3.10"
+keywords = ["numerology"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["numerology*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
