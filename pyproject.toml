@@ -3,11 +3,12 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "numerology"
+name = "numerology-lib"
 version = "1.2.2"
 description = "A numerology calculation library"
 readme = "README.md"
-license = { text = "CC BY-NC-ND 4.0" }
+license = "CC-BY-NC-ND-4.0"
+license-files = ["LICENSE.md"]
 authors = [{ name = "Daniel Datri" }]
 requires-python = ">=3.10"
 keywords = ["numerology"]
@@ -21,3 +22,10 @@ include = ["numerology*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "python -m pip install build && python -m build"
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"

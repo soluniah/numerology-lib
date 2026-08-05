@@ -4,10 +4,16 @@ A Python library to calculate numerology (Tantric) factors from a birth date.
 
 ## Installation
 
-Requirements: Python 3.10 or later.
+Requirements: Python 3.10 or later. The package is published on PyPI:
 
 ```bash
-pip install .
+pip install numerology-lib
+```
+
+For local development, install in editable mode instead:
+
+```bash
+pip install -e ".[dev]"
 ```
 
 ## Development Setup
@@ -49,17 +55,16 @@ deactivate
 
 ## Using in another project
 
-Since this library is not published on PyPI, install it directly from the GitHub
-repository:
+Add it to your `requirements.txt`:
+
+```
+numerology-lib>=1.2.2
+```
+
+Or install the latest development version directly from the GitHub repository:
 
 ```bash
 pip install git+https://github.com/soluniah/numerology-lib.git
-```
-
-Or add it to your `requirements.txt`:
-
-```
-numerology @ git+https://github.com/soluniah/numerology-lib.git
 ```
 
 ## Usage

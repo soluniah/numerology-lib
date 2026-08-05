@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+
+    permissions:
+      contents: write
+
+    outputs:
+      released: ${{ steps.release.outputs.released || 'false' }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Pin release branch to workflow commit
+        run: git reset --hard ${{ github.sha }}
+
+      - name: Semantic version release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v10.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: "github-actions"
+          git_committer_email: "actions@users.noreply.github.com"
+
+      - name: Publish to GitHub Release
+        uses: python-semantic-release/publish-action@v10.6.1
+        if: steps.release.outputs.released == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
+
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        if: steps.release.outputs.released == 'true'
+        with:
+          name: distribution-artifacts
+          path: dist
+          if-no-files-found: error
+
+  publish:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: distribution-artifacts
+          path: dist
+
+      # Uses Trusted Publishing (OIDC), no stored PyPI token needed.
+      # Register the pending publisher once in your PyPI account:
+      #   Owner: soluniah, Repository: numerology-lib, Workflow: release.yml
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
+          print-hash: true
