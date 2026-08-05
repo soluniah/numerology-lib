@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "numerology-lib"
-version = "1.2.2"
+version = "1.3.0"
 description = "A numerology calculation library"
 readme = "README.md"
 license = "CC-BY-NC-ND-4.0"
